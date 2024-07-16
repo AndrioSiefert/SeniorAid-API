@@ -11,7 +11,7 @@ class GenericRepository<Entity extends BaseEntity> {
         return this.repository.find();
     }
 
-    async getById(id: string): Promise<Entity | undefined> {
+    async getById(id: number): Promise<Entity | undefined> {
         const result = await this.repository.findOne({
             where: { id } as any
         });
@@ -19,9 +19,7 @@ class GenericRepository<Entity extends BaseEntity> {
     }
 
     async findOneByUser(user: string): Promise<Entity | null> {
-        return (
-            this.repository.findOne({ where: { user: user } } as any) || null
-        );
+        return this.repository.findOne({ where: { user: user } } as any);
     }
 
     async create(entity: Entity): Promise<Entity> {

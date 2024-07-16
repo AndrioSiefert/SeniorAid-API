@@ -1,7 +1,6 @@
 import express from 'express';
 import { AppDataSource } from '../config/dataSource';
 import SeniorRepository from '../repository/SeniorRepository';
-import GenericRepository from '../repository/GenericRepository';
 import SeniorController from '../controllers/SeniorController';
 
 const router = express.Router();

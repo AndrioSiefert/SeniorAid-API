@@ -1,4 +1,4 @@
-import ServiceRequestRepository from '../repository/Service-Request-Repository';
+import ServiceRequestRepository from '../repository/ServiceRequestRepository';
 import Controllers from './Controllers';
 import { Request, Response } from 'express';
 import ServiceRequestEntity from '../entities/ServiceRequestEntity';
@@ -8,17 +8,24 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
         super(repository);
     }
 
-    getAllServiceRequests = async (req: Request, res: Response) => {
+    getById = async (req: Request, res: Response) => {
+        const { id } = req.params;
+
         try {
-            const serviceRequests =
-                await this.repository.getAllServiceRequests();
-            return res.status(200).json(serviceRequests);
+            const serviceRequest =
+                await this.repository.getServiceRequestDetails(Number(id));
+            if (!serviceRequest) {
+                return res
+                    .status(404)
+                    .json({ message: 'Service request not found' });
+            }
+            return res.status(200).json(serviceRequest);
         } catch (error) {
             return res.status(500).json(error);
         }
     };
 
-    createRequest = async (req: Request, res: Response) => {
+    create = async (req: Request, res: Response): Promise<void> => {
         const { caregiverId, serviceId } = req.body;
 
         try {
@@ -27,18 +34,10 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
                 serviceId
             );
             await this.repository.create(serviceRequest);
-            return res.status(200).json(serviceRequest);
+            res.status(200).json(serviceRequest);
         } catch (error) {
-            return res.status(500).json(error);
+            res.status(500).json(error);
         }
-    };
-
-    getServiceRequestDetails = async (req: Request, res: Response) => {
-        const { id } = req.params;
-        const serviceRequest = await this.repository.getServiceRequestDetails(
-            parseInt(id, 10)
-        );
-        return res.status(200).json(serviceRequest);
     };
 
     acceptServiceRequest = async (req: Request, res: Response) => {
@@ -58,9 +57,10 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
             }
 
             const serviceRequest = await this.repository.acceptServiceRequest(
-                id,
+                Number(id),
                 accepted
             );
+
             return res.status(200).json(serviceRequest);
         } catch (error) {
             return res.status(500).json(error);

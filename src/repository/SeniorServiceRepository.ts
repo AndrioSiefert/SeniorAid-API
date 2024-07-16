@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import GenericRepository from './GenericRepository';
-import SeniorServiceEntity from '../entities/SeniorEntity-Service';
+import SeniorServiceEntity from '../entities/SeniorServiceEntity';
 import ServiceRequestEntity from '../entities/ServiceRequestEntity';
 
 class SeniorServiceRepository extends GenericRepository<SeniorServiceEntity> {
@@ -8,13 +8,13 @@ class SeniorServiceRepository extends GenericRepository<SeniorServiceEntity> {
         super(services);
     }
 
-    async getService() {
+    async ServiceAndSeniorInfo() {
         return await this.repository.find({
             relations: ['serviceRequests']
         });
     }
 
-    async findById(id: string) {
+    async findByIdInfo(id: string) {
         return await this.repository.findOne({
             where: { id: Number(id) },
             relations: ['senior', 'serviceRequests']

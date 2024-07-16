@@ -11,7 +11,7 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 
-@Entity('service_create_caregiver')
+@Entity('caregiver-service')
 export default class CaregiverServiceEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;

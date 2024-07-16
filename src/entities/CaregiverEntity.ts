@@ -10,7 +10,8 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import ServiceRequestEntity from './ServiceRequestEntity';
-import CaregiverServiceEntity from './CaregiverEntity-Service';
+import CaregiverServiceEntity from './CaregiverServiceEntity';
+import FeedbackEntity from './FeedbackEntity';
 
 @Entity('caregiver')
 export default class CaregiverEntity extends BaseEntity {
@@ -80,6 +81,9 @@ export default class CaregiverEntity extends BaseEntity {
         cascade: true
     })
     service!: CaregiverServiceEntity;
+
+    @OneToMany(() => FeedbackEntity, (feedback) => feedback.caregiver)
+    feedbacks!: FeedbackEntity[];
 
     constructor(
         name: string,
