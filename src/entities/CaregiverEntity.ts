@@ -28,9 +28,6 @@ export default class CaregiverEntity extends BaseEntity {
     password: string;
 
     @Column()
-    password_confirmation: string;
-
-    @Column()
     cpf: string;
 
     @Column()
@@ -90,7 +87,6 @@ export default class CaregiverEntity extends BaseEntity {
         email: string,
         cpf: string,
         password: string,
-        password_confirmation: string,
         description: string,
         phone?: string
     ) {
@@ -102,6 +98,5 @@ export default class CaregiverEntity extends BaseEntity {
         this.userType = 'caregiver';
         this.phone = phone;
         this.password = password;
-        this.password_confirmation = password_confirmation;
     }
 }

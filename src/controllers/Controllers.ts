@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import GenericRepository from '../repository/GenericRepository.js';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 dotenv.config();
 class Controllers<T extends GenericRepository<any>> {
     protected repository: T;
@@ -48,7 +49,19 @@ class Controllers<T extends GenericRepository<any>> {
 
     createUser = async (req: Request, res: Response) => {
         const dados = req.body;
+        const password_confirmation = req.body.password_confirmation;
+
         try {
+            if (dados.password !== password_confirmation) {
+                return res
+                    .status(400)
+                    .json({ error: 'As senhas não coincidem' });
+            }
+
+            const saltRounds = 10;
+            const hashedPassword = bcrypt.hashSync(dados.password, saltRounds);
+            dados.password = hashedPassword;
+
             const newEntity = await this.repository.create(dados);
             const jwtSecret = process.env.JWT_SECRET;
             if (!jwtSecret) {
