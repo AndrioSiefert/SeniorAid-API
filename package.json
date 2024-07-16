@@ -1,7 +1,7 @@
 {
-    "name": "type",
-    "version": "1.0.0",
-    "description": "",
+    "name": "senior-aid-project-backend",
+    "version": "2.0.0",
+    "description": "api for senior aid project",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
