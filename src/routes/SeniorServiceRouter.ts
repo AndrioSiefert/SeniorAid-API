@@ -1,7 +1,7 @@
 import express from 'express';
 import { AppDataSource } from '../config/dataSource';
-import SeniorControllerService from '../controllers/SeniorController-Service';
-import SeniorServiceRepository from '../repository/Senior-Service-Repository';
+import SeniorServiceRepository from '../repository/SeniorServiceRepository';
+import SeniorServiceController from '../controllers/SeniorServiceController';
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const seniorServiceRepository = new SeniorServiceRepository(
     AppDataSource.getRepository('SeniorServiceEntity')
 );
 
-const controllers = new SeniorControllerService(seniorServiceRepository);
+const controllers = new SeniorServiceController(seniorServiceRepository);
 
 router.get('/seniorService', (req, res) => controllers.getService(req, res));
 router.get('/seniorService/id/:id', (req, res) =>

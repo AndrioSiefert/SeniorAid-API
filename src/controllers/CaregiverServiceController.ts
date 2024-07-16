@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import CaregiverServiceRepository from '../repository/Caregiver-Service-Repository';
+import CaregiverServiceRepository from '../repository/CaregiverServiceRepository';
 import Controllers from './Controllers';
 
 class CaregiverServiceController extends Controllers<CaregiverServiceRepository> {

@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import GenericRepository from './GenericRepository';
-import SeniorServiceEntity from '../entities/SeniorEntity-Service';
+import SeniorServiceEntity from '../entities/SeniorServiceEntity';
 import ServiceRequestEntity from '../entities/ServiceRequestEntity';
 
 class SeniorServiceRepository extends GenericRepository<SeniorServiceEntity> {

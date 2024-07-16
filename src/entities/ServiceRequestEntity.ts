@@ -5,13 +5,15 @@ import {
     DeleteDateColumn,
     Entity,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
 import CaregiverEntity from './CaregiverEntity';
-import SeniorServiceEntity from './SeniorEntity-Service';
+import SeniorServiceEntity from './SeniorServiceEntity';
+import FeedbackEntity from './FeedbackEntity';
 
-@Entity('service_request')
+@Entity('service-request')
 export default class ServiceRequestEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
@@ -37,6 +39,9 @@ export default class ServiceRequestEntity extends BaseEntity {
         { eager: true }
     )
     service!: SeniorServiceEntity;
+
+    @OneToMany(() => FeedbackEntity, (feedback) => feedback.serviceRequest)
+    feedbacks!: FeedbackEntity[];
 
     constructor(caregiver: CaregiverEntity, service: SeniorServiceEntity) {
         super();

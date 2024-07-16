@@ -1,6 +1,6 @@
 import express from 'express';
 import { AppDataSource } from '../config/dataSource';
-import ServiceRequestRepository from '../repository/Service-Request-Repository';
+import ServiceRequestRepository from '../repository/ServiceRequestRepository';
 import GenericRepository from '../repository/GenericRepository';
 import ServiceRequestController from '../controllers/ServiceRequestController';
 

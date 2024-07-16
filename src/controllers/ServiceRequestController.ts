@@ -1,4 +1,4 @@
-import ServiceRequestRepository from '../repository/Service-Request-Repository';
+import ServiceRequestRepository from '../repository/ServiceRequestRepository';
 import Controllers from './Controllers';
 import { Request, Response } from 'express';
 import ServiceRequestEntity from '../entities/ServiceRequestEntity';

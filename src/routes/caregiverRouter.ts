@@ -1,9 +1,7 @@
 import express from 'express';
 import { AppDataSource } from '../config/dataSource.js';
-import UserRepository from '../repository/CaregiverRepository.js';
-import GenericRepository from '../repository/GenericRepository.js';
-import CaregiverController from '../controllers/caregiverController.js';
 import CaregiverRepository from '../repository/CaregiverRepository.js';
+import CaregiverController from '../controllers/CaregiverController.js';
 
 const router = express.Router();
 

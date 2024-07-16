@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import Controllers from './Controllers';
-import SeniorServiceRepository from '../repository/Senior-Service-Repository';
+import SeniorServiceRepository from '../repository/SeniorServiceRepository';
 
-class SeniorControllerService extends Controllers<SeniorServiceRepository> {
+class SeniorServiceController extends Controllers<SeniorServiceRepository> {
     constructor(repository: SeniorServiceRepository) {
         super(repository);
     }
@@ -42,4 +42,4 @@ class SeniorControllerService extends Controllers<SeniorServiceRepository> {
     };
 }
 
-export default SeniorControllerService;
+export default SeniorServiceController;

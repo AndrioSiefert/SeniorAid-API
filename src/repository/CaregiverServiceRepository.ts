@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import CaregiverEntityService from '../entities/CaregiverEntity-Service';
+import CaregiverEntityService from '../entities/CaregiverServiceEntity';
 import GenericRepository from './GenericRepository';
 
 class CaregiverServiceRepository extends GenericRepository<CaregiverEntityService> {

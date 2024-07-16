@@ -8,7 +8,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import SeniorServiceEntity from './SeniorEntity-Service';
+import SeniorServiceEntity from './SeniorServiceEntity';
 
 @Entity('senior')
 export default class SeniorEntity extends BaseEntity {
