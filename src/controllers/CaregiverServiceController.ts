@@ -24,7 +24,7 @@ class CaregiverServiceController extends Controllers<CaregiverServiceRepository>
         }
     };
 
-    get = async (req: Request, res: Response) => {
+    getInfoService = async (req: Request, res: Response) => {
         try {
             const id = req.params.id;
             const service = await this.repository.checkService(id);
