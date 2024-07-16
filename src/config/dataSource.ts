@@ -1,6 +1,4 @@
 import { DataSource } from 'typeorm';
-
-// import AdmEntity from '../entities/AdmEntity.js';
 import CaregiverEntity from '../entities/CaregiverEntity.js';
 import CaregiverServiceEntity from '../entities/CaregiverServiceEntity.js';
 import SeniorEntity from '../entities/SeniorEntity.js';

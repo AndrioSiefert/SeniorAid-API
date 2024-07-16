@@ -23,7 +23,7 @@ class Controllers<T extends GenericRepository<any>> {
     getById = async (req: Request, res: Response) => {
         const { id } = req.params;
         try {
-            const entity = await this.repository.getById(id);
+            const entity = await this.repository.getById(Number(id));
 
             if (entity === null || entity === undefined) {
                 return res.status(404).json({ message: 'not found' });

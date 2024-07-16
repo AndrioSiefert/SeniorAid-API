@@ -11,14 +11,14 @@ const seniorServiceRepository = new SeniorServiceRepository(
 
 const controllers = new SeniorServiceController(seniorServiceRepository);
 
-router.get('/seniorService', (req, res) => controllers.getService(req, res));
+router.get('/seniorService', (req, res) => controllers.getAll(req, res));
+router.get('/seniorService/info', (req, res) =>
+    controllers.ServiceAndSeniorInfoGlobal(req, res)
+);
+router.get('/seniorService/:id', (req, res) => controllers.getById(req, res));
 router.get('/seniorService/id/:id', (req, res) =>
-    controllers.getById(req, res)
+    controllers.findForInfo(req, res)
 );
-router.get('/seniorService/senior/:seniorId', (req, res) =>
-    controllers.getBySeniorId(req, res)
-);
-router.get('/seniorService/:id', (req, res) => controllers.get(req, res));
 router.post('/seniorService', (req, res) => controllers.create(req, res));
 router.put('/seniorService/:id', (req, res) => controllers.update(req, res));
 router.delete('/seniorService/:id', (req, res) => controllers.delete(req, res));

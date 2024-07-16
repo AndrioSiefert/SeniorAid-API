@@ -7,22 +7,16 @@ class ServiceRequestRepository extends GenericRepository<ServiceRequestEntity> {
         super(serviceRequest);
     }
 
-    async getAllServiceRequests() {
-        return await this.repository.find({
-            relations: ['caregiver', 'service', 'service.senior']
-        });
-    }
-
     async getServiceRequestDetails(id: number) {
         return await this.repository.findOne({
             where: { id },
-            relations: ['caregiver', 'service', 'service.senior']
+            relations: ['service', 'caregiver', 'service.senior']
         });
     }
 
-    async acceptServiceRequest(id: string | undefined, accepted: boolean) {
+    async acceptServiceRequest(id: number | undefined, accepted: boolean) {
         const serviceRequest = await this.repository.findOne({
-            where: { id } as any
+            where: { id }
         });
 
         if (!serviceRequest) {

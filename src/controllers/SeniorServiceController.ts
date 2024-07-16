@@ -7,9 +7,9 @@ class SeniorServiceController extends Controllers<SeniorServiceRepository> {
         super(repository);
     }
 
-    getService = async (req: Request, res: Response) => {
+    ServiceAndSeniorInfoGlobal = async (req: Request, res: Response) => {
         try {
-            const services = await this.repository.getService();
+            const services = await this.repository.ServiceAndSeniorInfo();
             res.status(200).json(services);
         } catch (error) {
             console.error(error);
@@ -17,21 +17,10 @@ class SeniorServiceController extends Controllers<SeniorServiceRepository> {
         }
     };
 
-    getBySeniorId = async (req: Request, res: Response) => {
-        try {
-            const seniorId = req.params.seniorId;
-            const services = await this.repository.findBySeniorId(seniorId);
-            res.status(200).json(services);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal server error' });
-        }
-    };
-
-    get = async (req: Request, res: Response) => {
+    findForInfo = async (req: Request, res: Response) => {
         try {
             const id = req.params.id;
-            const service = await this.repository.findById(id);
+            const service = await this.repository.findByIdInfo(id);
             if (!service) {
                 return res.status(404).json({ message: 'Service not found' });
             }
