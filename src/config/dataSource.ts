@@ -5,11 +5,13 @@ import SeniorEntity from '../entities/SeniorEntity.js';
 import SeniorServiceEntity from '../entities/SeniorServiceEntity.js';
 import ServiceRequestEntity from '../entities/ServiceRequestEntity.js';
 import FeedbackEntity from '../entities/FeedbackEntity.js';
+import UserEntity from '../entities/UserEntity.js';
 
 export const AppDataSource = new DataSource({
     type: 'sqlite',
     database: './src/config/database.sqlite',
     entities: [
+        UserEntity,
         CaregiverEntity,
         CaregiverServiceEntity,
         SeniorEntity,
@@ -17,5 +19,7 @@ export const AppDataSource = new DataSource({
         ServiceRequestEntity,
         FeedbackEntity
     ],
-    synchronize: true
+    synchronize: true,
+
+    migrations: ['./src/migrations/*.ts']
 });

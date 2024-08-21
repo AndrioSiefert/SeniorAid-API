@@ -13,8 +13,8 @@ const controllers = new CaregiverController(caregiverRepository);
 
 router.get('/caregiver', (req, res) => controllers.getAll(req, res));
 router.get('/caregiver/:id', (req, res) => controllers.getById(req, res));
-router.post('/caregiver', (req, res) => controllers.createUser(req, res));
-router.post('/caregiver/login', (req, res) => controllers.login(req, res));
+// router.post('/caregiver', (req, res) => controllers.createUser(req, res));
+// router.post('/caregiver/login', (req, res) => controllers.login(req, res));
 router.put('/caregiver/:id', (req, res) => controllers.update(req, res));
 router.delete('/caregiver/:id', (req, res) => controllers.delete(req, res));
 

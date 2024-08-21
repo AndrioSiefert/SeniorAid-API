@@ -41,6 +41,10 @@ class GenericRepository<Entity extends BaseEntity> {
         }
         return { message: 'Deletado com sucesso' };
     }
+
+    async login(email: string, password: string): Promise<Entity | null> {
+        return this.repository.findOne({ where: { email, password } } as any);
+    }
 }
 
 export default GenericRepository;

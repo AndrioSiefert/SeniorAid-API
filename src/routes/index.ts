@@ -4,6 +4,7 @@ import CaregiverRouter from './CaregiverRouter';
 import CaregiverServiceRouter from './CaregiverServiceRouter';
 import SeniorRouter from './SeniorRouter';
 import ServiceRequestRouter from './ServiceRequestRouter';
+import UserRouter from './UserRouter';
 
 const router = (app: express.Router) => {
     app.use(
@@ -12,7 +13,8 @@ const router = (app: express.Router) => {
         CaregiverServiceRouter,
         SeniorRouter,
         SeniorServiceRouter,
-        ServiceRequestRouter
+        ServiceRequestRouter,
+        UserRouter
     );
 };
 

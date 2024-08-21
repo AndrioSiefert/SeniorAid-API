@@ -8,25 +8,25 @@ class CaregiverRepository extends GenericRepository<CaregiverEntity> {
         super(caregiverRepository);
     }
 
-    async login(
-        email: string,
-        password: string
-    ): Promise<CaregiverEntity | null> {
-        const user = await this.repository.findOne({
-            where: { email: email }
-        });
-        if (!user) {
-            return null;
-        }
-        const isPasswordValid = bcrypt.compareSync(password, user.password);
-        return isPasswordValid ? user : null;
-    }
+    // async login(
+    //     email: string,
+    //     password: string
+    // ): Promise<CaregiverEntity | null> {
+    //     const user = await this.repository.findOne({
+    //         where: { email: email }
+    //     });
+    //     if (!user) {
+    //         return null;
+    //     }
+    //     const isPasswordValid = bcrypt.compareSync(password, user.password);
+    //     return isPasswordValid ? user : null;
+    // }
 
-    async findByEmail(email: string): Promise<CaregiverEntity | null> {
-        return await this.repository.findOne({
-            where: { email }
-        });
-    }
+    // async findByEmail(email: string): Promise<CaregiverEntity | null> {
+    //     return await this.repository.findOne({
+    //         where: { email }
+    //     });
+    // }
 }
 
 export default CaregiverRepository;

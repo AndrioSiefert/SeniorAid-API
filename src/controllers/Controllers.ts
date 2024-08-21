@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import GenericRepository from '../repository/GenericRepository.js';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-dotenv.config();
+
 class Controllers<T extends GenericRepository<any>> {
     protected repository: T;
 
@@ -44,51 +41,6 @@ class Controllers<T extends GenericRepository<any>> {
             res.status(200).json(dados);
         } catch (error) {
             res.status(500).json(error);
-        }
-    };
-
-    createUser = async (req: Request, res: Response) => {
-        const dados = req.body;
-        const password_confirmation = req.body.password_confirmation;
-
-        try {
-            if (dados.password !== password_confirmation) {
-                return res
-                    .status(400)
-                    .json({ error: 'As senhas não coincidem' });
-            }
-
-            const saltRounds = 10;
-            const hashedPassword = bcrypt.hashSync(dados.password, saltRounds);
-            dados.password = hashedPassword;
-
-            const newEntity = await this.repository.create(dados);
-            const jwtSecret = process.env.JWT_SECRET;
-            if (!jwtSecret) {
-                return res
-                    .status(500)
-                    .json({ error: 'Erro interno do servidor' });
-            }
-
-            const token = jwt.sign(
-                {
-                    id: newEntity.id,
-                    name: newEntity.name,
-                    userType: newEntity.userType
-                },
-                jwtSecret,
-                { expiresIn: '1h' }
-            );
-
-            res.status(201).json({
-                entity: newEntity,
-                token: token,
-                userType: newEntity.userType,
-                message: `criado com sucesso`
-            });
-        } catch (error) {
-            console.error('Erro ao criar entidade:', error);
-            res.status(500).json({ error: 'Erro interno do servidor' });
         }
     };
 

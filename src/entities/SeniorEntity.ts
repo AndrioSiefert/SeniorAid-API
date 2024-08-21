@@ -1,14 +1,13 @@
 import {
     BaseEntity,
     Column,
-    CreateDateColumn,
-    DeleteDateColumn,
     Entity,
     OneToMany,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn
+    OneToOne,
+    PrimaryGeneratedColumn
 } from 'typeorm';
 import SeniorServiceEntity from './SeniorServiceEntity';
+import UserEntity from './UserEntity';
 
 @Entity('senior')
 export default class SeniorEntity extends BaseEntity {
@@ -16,57 +15,51 @@ export default class SeniorEntity extends BaseEntity {
     id!: number;
 
     @Column()
-    name: string;
+    name!: string;
+
+    @Column({ unique: true })
+    email!: string;
 
     @Column()
-    email: string;
+    password!: string;
 
     @Column()
-    password: string;
+    cpf!: string;
 
     @Column()
-    cpf: string;
+    age!: number;
 
     @Column()
-    age: number;
+    phone!: string;
 
     @Column()
-    phone: string;
+    cep!: string;
 
     @Column()
-    cep: string;
+    neighborhood!: string;
 
     @Column()
-    neighborhood: string;
+    city!: string;
 
     @Column()
-    city: string;
+    state!: string;
 
     @Column()
-    state: string;
+    street!: string;
 
     @Column()
-    street: string;
+    address_number!: number;
 
     @Column()
-    address_number: number;
-
-    @Column({ default: 'senior' })
-    userType!: string;
-
-    @CreateDateColumn()
-    createdDate!: Date;
-
-    @UpdateDateColumn()
-    updatedDate!: Date;
-
-    @DeleteDateColumn()
-    deletedDate!: Date;
+    photo?: string;
 
     @OneToMany(() => SeniorServiceEntity, (service) => service.senior, {
         cascade: true
     })
     services!: SeniorServiceEntity[];
+
+    @OneToOne(() => UserEntity, (user) => user.senior)
+    user?: UserEntity;
 
     constructor(
         name: string,
@@ -76,11 +69,12 @@ export default class SeniorEntity extends BaseEntity {
         age: number,
         phone: string,
         cep: string,
+        neighborhood: string,
         city: string,
         state: string,
-        neighborhood: string,
         street: string,
-        address_number: number
+        address_number: number,
+        photo?: string
     ) {
         super();
         this.name = name;
@@ -90,11 +84,11 @@ export default class SeniorEntity extends BaseEntity {
         this.age = age;
         this.phone = phone;
         this.cep = cep;
+        this.neighborhood = neighborhood;
         this.city = city;
         this.state = state;
-        this.neighborhood = neighborhood;
         this.street = street;
         this.address_number = address_number;
-        this.userType = 'senior';
+        this.photo = photo;
     }
 }
