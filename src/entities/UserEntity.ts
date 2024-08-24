@@ -6,13 +6,11 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    AfterInsert,
     OneToOne,
     JoinColumn
 } from 'typeorm';
 import CaregiverEntity from './CaregiverEntity';
 import SeniorEntity from './SeniorEntity';
-import { AppDataSource } from '../config/dataSource';
 
 @Entity('user')
 export default class UserEntity extends BaseEntity {
@@ -56,7 +54,7 @@ export default class UserEntity extends BaseEntity {
     address_number: number;
 
     @Column()
-    photo?: string;
+    photo: string;
 
     @Column()
     user_type?: 'senior' | 'caregiver';
@@ -73,6 +71,12 @@ export default class UserEntity extends BaseEntity {
     @OneToOne(() => SeniorEntity, (senior) => senior.user, { nullable: true })
     @JoinColumn()
     senior?: SeniorEntity;
+
+    @OneToOne(() => CaregiverEntity, (caregiver) => caregiver.user, {
+        nullable: true
+    })
+    @JoinColumn()
+    caregiver?: CaregiverEntity;
 
     constructor(
         name: string,
@@ -105,42 +109,5 @@ export default class UserEntity extends BaseEntity {
         this.address_number = address_number;
         this.photo = photo;
         this.user_type = user_type;
-    }
-
-    @AfterInsert()
-    async createRelatedEntity() {
-        console.log('createRelatedEntity method called.');
-        if (this.user_type === 'senior') {
-            try {
-                console.log('Starting transaction...');
-                const seniorEntity = new SeniorEntity(
-                    this.name,
-                    this.email,
-                    this.password,
-                    this.cpf,
-                    this.age,
-                    this.phone,
-                    this.cep,
-                    this.neighborhood,
-                    this.city,
-                    this.state,
-                    this.street,
-                    this.address_number,
-                    this.photo
-                );
-
-                console.log('Saving SeniorEntity...');
-                const seniorRepo = AppDataSource.getRepository(SeniorEntity);
-                await seniorRepo.save(seniorEntity);
-
-                this.senior = seniorEntity;
-                console.log('Updating UserEntity...');
-                const userRepo = AppDataSource.getRepository(UserEntity);
-                await userRepo.save(this);
-                console.log('Transaction completed.');
-            } catch (error) {
-                console.error('Error in createRelatedEntity:', error);
-            }
-        }
     }
 }

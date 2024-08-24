@@ -5,7 +5,10 @@ import UserController from '../controllers/UserController';
 
 const router = express.Router();
 
-const user = new UserRepository(AppDataSource.getRepository('UserEntity'));
+const user = new UserRepository(
+    AppDataSource.getRepository('UserEntity'),
+    AppDataSource
+);
 
 const controllers = new UserController(user);
 

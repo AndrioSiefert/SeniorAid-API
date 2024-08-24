@@ -1,13 +1,29 @@
 import bcrypt from 'bcrypt';
 import UserEntity from '../entities/UserEntity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import GenericRepository from './GenericRepository';
 import dotenv from 'dotenv';
+import CaregiverEntity from '../entities/CaregiverEntity';
+import SeniorEntity from '../entities/SeniorEntity';
 dotenv.config();
 
 class UserRepository extends GenericRepository<UserEntity> {
-    constructor(entity: Repository<UserEntity>) {
+    getRepository(): Repository<UserRepository> {
+        throw new Error('Method not implemented.');
+    }
+    private dataSource: DataSource;
+
+    constructor(entity: Repository<UserEntity>, dataSource: DataSource) {
         super(entity);
+        this.dataSource = dataSource;
+    }
+
+    getCaregiverRepository(): Repository<CaregiverEntity> {
+        return this.dataSource.getRepository(CaregiverEntity);
+    }
+
+    getSeniorRepository(): Repository<SeniorEntity> {
+        return this.dataSource.getRepository(SeniorEntity);
     }
 
     async login(email: string, password: string): Promise<UserEntity | null> {
@@ -22,12 +38,11 @@ class UserRepository extends GenericRepository<UserEntity> {
     }
 
     async save(entity: UserEntity): Promise<UserEntity> {
-        return await this.repository.save(entity);
+        return this.repository.save(entity);
     }
 
     createUser(entity: UserEntity): UserEntity {
-        const newUser = this.repository.create(entity);
-        return newUser;
+        return this.repository.create(entity);
     }
 }
 

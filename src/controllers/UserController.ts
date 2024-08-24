@@ -4,6 +4,8 @@ import Controllers from './Controllers';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import SeniorEntity from '../entities/SeniorEntity';
+import CaregiverEntity from '../entities/CaregiverEntity';
 dotenv.config();
 
 class UserController extends Controllers<UserRepository> {
@@ -25,11 +27,48 @@ class UserController extends Controllers<UserRepository> {
             const hashedPassword = bcrypt.hashSync(dados.password, saltRounds);
             dados.password = hashedPassword;
 
-            // Crie uma nova instância de UserEntity
             const newEntity = this.repository.createUser(dados);
+            const savedEntity = await this.repository.save(newEntity);
 
-            // Salve a nova entidade
-            const savedEntity = await this.repository.save(await newEntity);
+            if (savedEntity.user_type === 'senior') {
+                const seniorRepo = this.repository.getSeniorRepository();
+                const seniorEntity = new SeniorEntity(
+                    savedEntity.name,
+                    savedEntity.email,
+                    savedEntity.password,
+                    savedEntity.cpf,
+                    savedEntity.age,
+                    savedEntity.phone,
+                    savedEntity.cep,
+                    savedEntity.neighborhood,
+                    savedEntity.city,
+                    savedEntity.state,
+                    savedEntity.street,
+                    savedEntity.address_number,
+                    savedEntity.photo
+                );
+                seniorEntity.user = savedEntity;
+                await seniorRepo.save(seniorEntity);
+            } else if (savedEntity.user_type === 'caregiver') {
+                const caregiverRepo = this.repository.getCaregiverRepository();
+                const caregiverEntity = new CaregiverEntity(
+                    savedEntity.name,
+                    savedEntity.email,
+                    savedEntity.password,
+                    savedEntity.cpf,
+                    savedEntity.age,
+                    savedEntity.phone,
+                    savedEntity.cep,
+                    savedEntity.neighborhood,
+                    savedEntity.city,
+                    savedEntity.state,
+                    savedEntity.street,
+                    savedEntity.address_number,
+                    savedEntity.photo
+                );
+                caregiverEntity.user = savedEntity;
+                await caregiverRepo.save(caregiverEntity);
+            }
 
             const jwtSecret = process.env.JWT_SECRET;
             if (!jwtSecret) {
@@ -37,7 +76,6 @@ class UserController extends Controllers<UserRepository> {
                     .status(500)
                     .json({ error: 'Erro interno do servidor' });
             }
-
             const token = jwt.sign(
                 {
                     id: savedEntity.id,
@@ -47,7 +85,6 @@ class UserController extends Controllers<UserRepository> {
                 jwtSecret,
                 { expiresIn: '1h' }
             );
-
             res.status(201).json({
                 entity: savedEntity,
                 token: token,
