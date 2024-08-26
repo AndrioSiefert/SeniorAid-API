@@ -5,12 +5,9 @@ import UserController from '../controllers/UserController';
 
 const router = express.Router();
 
-const user = new UserRepository(
-    AppDataSource.getRepository('UserEntity'),
-    AppDataSource
-);
+const userRepository = new UserRepository(AppDataSource);
 
-const controllers = new UserController(user);
+const controllers = new UserController(userRepository);
 
 router.get('/user', (req, res) => controllers.getAll(req, res));
 router.get('/user/:id', (req, res) => controllers.getById(req, res));

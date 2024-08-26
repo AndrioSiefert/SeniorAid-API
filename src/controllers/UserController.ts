@@ -13,6 +13,11 @@ class UserController extends Controllers<UserRepository> {
         super(repository);
     }
     createUser = async (req: Request, res: Response) => {
+        const existingUser = await this.repository.getByEmail(req.body.email);
+        if (existingUser) {
+            return res.status(400).json({ error: 'Usuário já cadastrado' });
+        }
+
         const dados = req.body;
         const password_confirmation = req.body.password_confirmation;
 
@@ -21,6 +26,15 @@ class UserController extends Controllers<UserRepository> {
                 return res
                     .status(400)
                     .json({ error: 'As senhas não coincidem' });
+            }
+
+            if (
+                dados.user_type !== 'senior' &&
+                dados.user_type !== 'caregiver'
+            ) {
+                return res
+                    .status(400)
+                    .json({ error: 'Tipo de usuário inválido' });
             }
 
             const saltRounds = 10;

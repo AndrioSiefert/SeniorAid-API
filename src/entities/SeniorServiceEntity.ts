@@ -13,7 +13,7 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 
-@Entity('senior-service')
+@Entity('senior_service')
 export default class SeniorServiceEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;

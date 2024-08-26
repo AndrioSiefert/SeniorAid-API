@@ -7,10 +7,12 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     OneToOne,
-    JoinColumn
+    JoinColumn,
+    OneToMany
 } from 'typeorm';
 import CaregiverEntity from './CaregiverEntity';
 import SeniorEntity from './SeniorEntity';
+import FeedbackEntity from './FeedbackEntity';
 
 @Entity('user')
 export default class UserEntity extends BaseEntity {

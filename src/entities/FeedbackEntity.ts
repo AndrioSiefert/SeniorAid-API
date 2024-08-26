@@ -2,12 +2,15 @@ import {
     BaseEntity,
     Column,
     CreateDateColumn,
+    DeleteDateColumn,
     Entity,
     ManyToOne,
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
 } from 'typeorm';
-import ServiceRequestEntity from './ServiceRequestEntity';
 import CaregiverEntity from './CaregiverEntity';
+import SeniorEntity from './SeniorEntity';
+import UserEntity from './UserEntity';
 
 @Entity('feedback')
 export default class FeedbackEntity extends BaseEntity {
@@ -15,7 +18,7 @@ export default class FeedbackEntity extends BaseEntity {
     id!: number;
 
     @Column({ type: 'text' })
-    comments!: string;
+    comment!: string;
 
     @Column({ type: 'int', default: 0 })
     rating!: number;
@@ -23,25 +26,28 @@ export default class FeedbackEntity extends BaseEntity {
     @CreateDateColumn()
     createdDate!: Date;
 
-    @ManyToOne(
-        () => ServiceRequestEntity,
-        (serviceRequest) => serviceRequest.feedbacks
-    )
-    serviceRequest!: ServiceRequestEntity;
+    @UpdateDateColumn()
+    updatedDate!: Date;
 
-    @ManyToOne(() => CaregiverEntity, (caregiver) => caregiver.feedbacks)
-    caregiver!: CaregiverEntity;
+    @DeleteDateColumn()
+    deletedDate!: Date;
+
+    @ManyToOne(() => SeniorEntity, { nullable: false })
+    giver!: SeniorEntity;
+
+    @ManyToOne(() => CaregiverEntity, { nullable: false })
+    receiver!: CaregiverEntity;
 
     constructor(
-        comments: string,
-        rating: number,
-        serviceRequest: ServiceRequestEntity,
-        caregiver: CaregiverEntity
+        giver: SeniorEntity,
+        receiver: CaregiverEntity,
+        comment: string,
+        rating: number
     ) {
         super();
-        this.comments = comments;
+        this.giver = giver;
+        this.receiver = receiver;
+        this.comment = comment;
         this.rating = rating;
-        this.serviceRequest = serviceRequest;
-        this.caregiver = caregiver;
     }
 }

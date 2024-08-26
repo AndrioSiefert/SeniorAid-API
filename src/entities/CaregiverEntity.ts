@@ -68,8 +68,10 @@ export default class CaregiverEntity extends BaseEntity {
     })
     service!: CaregiverServiceEntity;
 
-    @OneToMany(() => FeedbackEntity, (feedback) => feedback.caregiver)
-    feedbacks!: FeedbackEntity[];
+    @OneToMany(() => FeedbackEntity, (feedback) => feedback.receiver, {
+        cascade: true
+    })
+    feedback!: FeedbackEntity[];
 
     constructor(
         name: string,

@@ -25,6 +25,16 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
         }
     };
 
+    getAllRequest = async (req: Request, res: Response) => {
+        try {
+            const serviceRequests =
+                await this.repository.getServiceAllRequests();
+            return res.status(200).json(serviceRequests);
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    };
+
     create = async (req: Request, res: Response): Promise<void> => {
         const { caregiverId, serviceId } = req.body;
 

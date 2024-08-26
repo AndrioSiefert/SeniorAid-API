@@ -9,7 +9,10 @@ const serviceRequestRepository = new ServiceRequestRepository(
 );
 const controllers = new ServiceRequestController(serviceRequestRepository);
 
-router.get('/service-request', (req, res) => controllers.getAll(req, res));
+// router.get('/service-request', (req, res) => controllers.getAll(req, res));
+router.get('/service-request', (req, res) =>
+    controllers.getAllRequest(req, res)
+);
 router.get('/service-request/:id', (req, res) => controllers.getById(req, res));
 router.post('/service-request', (req, res) => controllers.create(req, res));
 router.put('/service-request/accept/:id', (req, res) =>

@@ -8,13 +8,9 @@ import SeniorEntity from '../entities/SeniorEntity';
 dotenv.config();
 
 class UserRepository extends GenericRepository<UserEntity> {
-    getRepository(): Repository<UserRepository> {
-        throw new Error('Method not implemented.');
-    }
     private dataSource: DataSource;
-
-    constructor(entity: Repository<UserEntity>, dataSource: DataSource) {
-        super(entity);
+    constructor(dataSource: DataSource) {
+        super(dataSource.getRepository(UserEntity));
         this.dataSource = dataSource;
     }
 
@@ -24,6 +20,16 @@ class UserRepository extends GenericRepository<UserEntity> {
 
     getSeniorRepository(): Repository<SeniorEntity> {
         return this.dataSource.getRepository(SeniorEntity);
+    }
+
+    createUser(entity: UserEntity): UserEntity {
+        return this.repository.create(entity);
+    }
+
+    async getByEmail(email: string): Promise<UserEntity | null> {
+        return this.repository.findOne({
+            where: { email }
+        });
     }
 
     async login(email: string, password: string): Promise<UserEntity | null> {
@@ -39,10 +45,6 @@ class UserRepository extends GenericRepository<UserEntity> {
 
     async save(entity: UserEntity): Promise<UserEntity> {
         return this.repository.save(entity);
-    }
-
-    createUser(entity: UserEntity): UserEntity {
-        return this.repository.create(entity);
     }
 }
 

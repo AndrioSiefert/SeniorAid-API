@@ -11,9 +11,8 @@ import {
 } from 'typeorm';
 import CaregiverEntity from './CaregiverEntity';
 import SeniorServiceEntity from './SeniorServiceEntity';
-import FeedbackEntity from './FeedbackEntity';
 
-@Entity('service-request')
+@Entity('service_request')
 export default class ServiceRequestEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
@@ -39,9 +38,6 @@ export default class ServiceRequestEntity extends BaseEntity {
         { eager: true }
     )
     service!: SeniorServiceEntity;
-
-    @OneToMany(() => FeedbackEntity, (feedback) => feedback.serviceRequest)
-    feedbacks!: FeedbackEntity[];
 
     constructor(caregiver: CaregiverEntity, service: SeniorServiceEntity) {
         super();
