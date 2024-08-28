@@ -22,6 +22,13 @@ class FeedbackRepository extends GenericRepository<FeedbackEntity> {
     async save(entity: FeedbackEntity): Promise<FeedbackEntity> {
         return this.repository.save(entity);
     }
+
+    async getGiverAndReciver(id: number): Promise<FeedbackEntity | null> {
+        return await this.repository.findOne({
+            where: { id },
+            relations: ['giver', 'reciver']
+        });
+    }
 }
 
 export default FeedbackRepository;

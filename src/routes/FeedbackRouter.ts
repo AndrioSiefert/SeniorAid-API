@@ -26,6 +26,9 @@ router.get('/feedback', (req, res) => feedbackController.getAll(req, res));
 router.get('/feedback/id/:id', (req, res) =>
     feedbackController.getById(req, res)
 );
+router.get('/feedback/get/:id', (req, res) =>
+    feedbackController.getGiverAndReciver(req, res)
+);
 router.post('/feedback', (req, res) => feedbackController.create(req, res));
 router.put('/feedback', (req, res) => feedbackController.update(req, res));
 router.delete('/feedback/:id', (req, res) =>

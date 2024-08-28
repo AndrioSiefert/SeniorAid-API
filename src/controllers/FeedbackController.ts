@@ -41,6 +41,16 @@ class FeedbackController extends Controllers<FeedbackRepository> {
         const newFeedback = await this.repository.create(feedback);
         res.status(201).json(newFeedback);
     };
+
+    getGiverAndReciver = async (req: Request, res: Response): Promise<void> => {
+        const { id } = req.params;
+        const feedback = await this.repository.getGiverAndReciver(Number(id));
+        if (!feedback) {
+            res.status(404).json({ message: 'Feedback not found' });
+            return;
+        }
+        res.status(200).json(feedback);
+    };
 }
 
 export default FeedbackController;
