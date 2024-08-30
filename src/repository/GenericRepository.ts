@@ -45,6 +45,10 @@ class GenericRepository<Entity extends BaseEntity> {
     async login(email: string, password: string): Promise<Entity | null> {
         return this.repository.findOne({ where: { email, password } } as any);
     }
+
+    async save(entity: Entity): Promise<Entity> {
+        return this.repository.save(entity);
+    }
 }
 
 export default GenericRepository;

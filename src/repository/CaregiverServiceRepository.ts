@@ -13,6 +13,12 @@ class CaregiverServiceRepository extends GenericRepository<CaregiverServiceEntit
             relations: ['caregiver']
         });
     }
+
+    allCaregiverWhithService() {
+        return this.repository.find({
+            relations: ['caregiver']
+        });
+    }
 }
 
 export default CaregiverServiceRepository;

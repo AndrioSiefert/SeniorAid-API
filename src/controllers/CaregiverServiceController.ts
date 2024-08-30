@@ -9,15 +9,19 @@ class CaregiverServiceController extends Controllers<CaregiverServiceRepository>
 
     create = async (req: Request, res: Response) => {
         try {
-            const { id } = req.params;
-            const existingService = await this.repository.checkService(id);
+            const { caregiverId } = req.body;
+            const existingServices = await this.repository.checkService(
+                caregiverId
+            );
 
-            if (existingService) {
-                res.status(400).json({ message: 'Serviço já existe' });
+            if (existingServices) {
+                res.status(400).json({ message: 'Service already exists' });
                 return;
             }
 
             const service = await this.repository.create(req.body);
+            await this.repository.save(service);
+
             res.status(201).json(service);
         } catch (error) {
             res.status(500).json(error);
@@ -32,6 +36,15 @@ class CaregiverServiceController extends Controllers<CaregiverServiceRepository>
                 return res.status(404).json({ message: 'Service not found' });
             }
             res.status(200).json(service);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    };
+
+    getCaregiverWithService = async (req: Request, res: Response) => {
+        try {
+            const services = await this.repository.allCaregiverWhithService();
+            res.status(200).json(services);
         } catch (error) {
             res.status(500).json(error);
         }

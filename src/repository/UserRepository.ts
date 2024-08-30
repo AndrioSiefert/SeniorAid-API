@@ -42,10 +42,6 @@ class UserRepository extends GenericRepository<UserEntity> {
         const isPasswordValid = bcrypt.compareSync(password, user.password);
         return isPasswordValid ? user : null;
     }
-
-    async save(entity: UserEntity): Promise<UserEntity> {
-        return this.repository.save(entity);
-    }
 }
 
 export default UserRepository;
