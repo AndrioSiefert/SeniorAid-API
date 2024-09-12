@@ -17,7 +17,7 @@ export default class CaregiverServiceEntity extends BaseEntity {
     id!: number;
 
     @Column()
-    qualification: string;
+    qualification?: string;
 
     @Column()
     skills: string;

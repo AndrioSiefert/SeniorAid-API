@@ -19,7 +19,7 @@ export default class SeniorServiceEntity extends BaseEntity {
     id!: number;
 
     @Column()
-    serviceType: string;
+    serviceName: string;
 
     @Column()
     dateService: Date;
@@ -28,19 +28,16 @@ export default class SeniorServiceEntity extends BaseEntity {
     time: string;
 
     @Column()
-    medications: string;
+    place: string;
 
     @Column()
-    location: string;
+    medications: string;
 
     @Column()
     description: string;
 
     @Column()
     price: string;
-
-    @Column()
-    urgencyLevel: string;
 
     @Column()
     seniorId?: string;
@@ -65,25 +62,23 @@ export default class SeniorServiceEntity extends BaseEntity {
     serviceRequests!: ServiceRequestEntity[];
 
     constructor(
-        serviceType: string,
+        serviceName: string,
         dateService: Date,
         time: string,
+        place: string,
         medications: string,
-        location: string,
         description: string,
         price: string,
-        urgencyLevel: string,
         seniorId: SeniorEntity
     ) {
         super();
-        this.serviceType = serviceType;
+        this.serviceName = serviceName;
         this.dateService = dateService;
         this.time = time;
+        this.place = place;
         this.medications = medications;
         this.description = description;
-        this.location = location;
         this.price = price;
-        this.urgencyLevel = urgencyLevel;
         this.senior = seniorId;
     }
 }
