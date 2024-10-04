@@ -34,6 +34,9 @@ export default class UserEntity extends BaseEntity {
     age: number;
 
     @Column()
+    gender: 'man' | 'woman';
+
+    @Column()
     phone: string;
 
     @Column()
@@ -85,6 +88,7 @@ export default class UserEntity extends BaseEntity {
         password: string,
         cpf: string,
         age: number,
+        gender: 'man' | 'woman',
         phone: string,
         cep: string,
         city: string,
@@ -101,6 +105,7 @@ export default class UserEntity extends BaseEntity {
         this.password = password;
         this.cpf = cpf;
         this.age = age;
+        this.gender = gender;
         this.phone = phone;
         this.cep = cep;
         this.city = city;

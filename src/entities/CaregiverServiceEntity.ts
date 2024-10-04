@@ -17,22 +17,13 @@ export default class CaregiverServiceEntity extends BaseEntity {
     id!: number;
 
     @Column()
-    qualification?: string;
-
-    @Column()
-    skills: string;
-
-    @Column()
-    aboutMe: string;
+    preference: string;
 
     @Column()
     experience: string;
 
     @Column()
-    languages: string;
-
-    @Column()
-    description: string;
+    about: string;
 
     @Column()
     price: number;
@@ -54,22 +45,16 @@ export default class CaregiverServiceEntity extends BaseEntity {
     caregiver!: CaregiverEntity;
 
     constructor(
-        qualification: string,
-        skills: string,
-        aboutMe: string,
+        preference: string,
         experience: string,
-        languages: string,
-        description: string,
+        about: string,
         price: number,
         caregiverId: CaregiverEntity
     ) {
         super();
-        this.qualification = qualification;
-        this.skills = skills;
-        this.aboutMe = aboutMe;
+        this.preference = preference;
         this.experience = experience;
-        this.languages = languages;
-        this.description = description;
+        this.about = about;
         this.price = price;
         this.caregiver = caregiverId;
     }

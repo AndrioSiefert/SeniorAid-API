@@ -12,8 +12,10 @@ class UserController extends Controllers<UserRepository> {
     constructor(repository: UserRepository) {
         super(repository);
     }
+
     createUser = async (req: Request, res: Response) => {
         const existingUser = await this.repository.getByEmail(req.body.email);
+
         if (existingUser) {
             return res.status(400).json({ error: 'Usuário já cadastrado' });
         }
@@ -21,22 +23,24 @@ class UserController extends Controllers<UserRepository> {
         const dados = req.body;
         const password_confirmation = req.body.password_confirmation;
 
+        if (dados.password !== password_confirmation) {
+            return res
+                .status(400)
+                .json({ error: 'As senhas não coincidem' })
+            ;
+        }
+
+        if (
+            dados.user_type !== 'senior' &&
+            dados.user_type !== 'caregiver'
+        ) {
+            return res
+                .status(400)
+                .json({ error: 'Tipo de usuário inválido' })
+            ;
+        }
+
         try {
-            if (dados.password !== password_confirmation) {
-                return res
-                    .status(400)
-                    .json({ error: 'As senhas não coincidem' });
-            }
-
-            if (
-                dados.user_type !== 'senior' &&
-                dados.user_type !== 'caregiver'
-            ) {
-                return res
-                    .status(400)
-                    .json({ error: 'Tipo de usuário inválido' });
-            }
-
             const saltRounds = 10;
             const hashedPassword = bcrypt.hashSync(dados.password, saltRounds);
             dados.password = hashedPassword;
@@ -52,6 +56,7 @@ class UserController extends Controllers<UserRepository> {
                     savedEntity.password,
                     savedEntity.cpf,
                     savedEntity.age,
+                    savedEntity.gender,
                     savedEntity.phone,
                     savedEntity.cep,
                     savedEntity.neighborhood,
@@ -59,10 +64,12 @@ class UserController extends Controllers<UserRepository> {
                     savedEntity.state,
                     savedEntity.street,
                     savedEntity.address_number,
-                    savedEntity.photo
+                    savedEntity.photo,
+                    savedEntity.user_type
                 );
                 seniorEntity.user = savedEntity;
                 await seniorRepo.save(seniorEntity);
+
             } else if (savedEntity.user_type === 'caregiver') {
                 const caregiverRepo = this.repository.getCaregiverRepository();
                 const caregiverEntity = new CaregiverEntity(
@@ -71,6 +78,7 @@ class UserController extends Controllers<UserRepository> {
                     savedEntity.password,
                     savedEntity.cpf,
                     savedEntity.age,
+                    savedEntity.gender,
                     savedEntity.phone,
                     savedEntity.cep,
                     savedEntity.neighborhood,
@@ -78,7 +86,8 @@ class UserController extends Controllers<UserRepository> {
                     savedEntity.state,
                     savedEntity.street,
                     savedEntity.address_number,
-                    savedEntity.photo
+                    savedEntity.photo,
+                    savedEntity.user_type
                 );
                 caregiverEntity.user = savedEntity;
                 await caregiverRepo.save(caregiverEntity);

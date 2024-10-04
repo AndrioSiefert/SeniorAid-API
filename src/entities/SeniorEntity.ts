@@ -11,49 +11,7 @@ import UserEntity from './UserEntity';
 import FeedbackEntity from './FeedbackEntity';
 
 @Entity('senior')
-export default class SeniorEntity extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id!: number;
-
-    @Column()
-    name!: string;
-
-    @Column({ unique: true })
-    email!: string;
-
-    @Column()
-    password!: string;
-
-    @Column()
-    cpf!: string;
-
-    @Column()
-    age!: number;
-
-    @Column()
-    phone!: string;
-
-    @Column()
-    cep!: string;
-
-    @Column()
-    neighborhood!: string;
-
-    @Column()
-    city!: string;
-
-    @Column()
-    state!: string;
-
-    @Column()
-    street!: string;
-
-    @Column()
-    address_number!: number;
-
-    @Column()
-    photo?: string;
-
+export default class SeniorEntity extends UserEntity {
     @OneToMany(() => SeniorServiceEntity, (service) => service.senior, {
         cascade: true
     })
@@ -64,35 +22,4 @@ export default class SeniorEntity extends BaseEntity {
 
     @OneToMany(() => FeedbackEntity, (feedback) => feedback.giver)
     feedbacks!: FeedbackEntity[];
-
-    constructor(
-        name: string,
-        email: string,
-        password: string,
-        cpf: string,
-        age: number,
-        phone: string,
-        cep: string,
-        neighborhood: string,
-        city: string,
-        state: string,
-        street: string,
-        address_number: number,
-        photo?: string
-    ) {
-        super();
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.cpf = cpf;
-        this.age = age;
-        this.phone = phone;
-        this.cep = cep;
-        this.neighborhood = neighborhood;
-        this.city = city;
-        this.state = state;
-        this.street = street;
-        this.address_number = address_number;
-        this.photo = photo;
-    }
 }
