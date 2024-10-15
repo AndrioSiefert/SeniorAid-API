@@ -5,7 +5,7 @@ import feedbackRouter from './feedbackRouter';
 import seniorRouter from './seniorRouter';
 import seniorServiceRouter from './seniorServiceRouter';
 import serviceRequestRouter from './serviceRequestRouter';
-import userRouter from './userRouter';
+import userRouter from './UserRouter';
 import path from 'path';
 
 const router = (app: express.Router) => {
