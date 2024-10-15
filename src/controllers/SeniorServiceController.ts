@@ -7,6 +7,25 @@ class SeniorServiceController extends Controllers<SeniorServiceRepository> {
         super(repository);
     }
 
+    create = async (req: Request, res: Response) => {
+        try {
+            const { seniorId } = req.body;
+            const existingServices = await this.repository.findByIdInfo(seniorId);
+
+            if (existingServices) {
+                res.status(400).json({ message: 'Service already exists' });
+                return;
+            }
+
+            const service = await this.repository.create(req.body);
+            await this.repository.save(service);
+
+            res.status(201).json(service);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    };
+
     ServiceAndSeniorInfoGlobal = async (req: Request, res: Response) => {
         try {
             const services = await this.repository.ServiceAndSeniorInfo();

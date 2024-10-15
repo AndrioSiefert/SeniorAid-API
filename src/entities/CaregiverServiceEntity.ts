@@ -8,7 +8,7 @@ import {
     JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('caregiver_service')
@@ -17,28 +17,19 @@ export default class CaregiverServiceEntity extends BaseEntity {
     id!: number;
 
     @Column()
-    qualification?: string;
-
-    @Column()
-    skills: string;
-
-    @Column()
-    aboutMe: string;
+    preference: string;
 
     @Column()
     experience: string;
 
     @Column()
-    languages: string;
-
-    @Column()
-    description: string;
+    about: string;
 
     @Column()
     price: number;
 
     @Column()
-    caregiverId?: string;
+    caregiverId?: number;
 
     @CreateDateColumn()
     createdDate!: Date;
@@ -49,27 +40,21 @@ export default class CaregiverServiceEntity extends BaseEntity {
     @DeleteDateColumn({ nullable: true })
     deletedDate!: Date | null;
 
-    @ManyToOne(() => CaregiverEntity, (caregiver) => caregiver.service)
+    @ManyToOne(() => CaregiverEntity, caregiver => caregiver.service)
     @JoinColumn({ name: 'caregiverId' })
     caregiver!: CaregiverEntity;
 
     constructor(
-        qualification: string,
-        skills: string,
-        aboutMe: string,
+        preference: string,
         experience: string,
-        languages: string,
-        description: string,
+        about: string,
         price: number,
-        caregiverId: CaregiverEntity
+        caregiverId: CaregiverEntity,
     ) {
         super();
-        this.qualification = qualification;
-        this.skills = skills;
-        this.aboutMe = aboutMe;
+        this.preference = preference;
         this.experience = experience;
-        this.languages = languages;
-        this.description = description;
+        this.about = about;
         this.price = price;
         this.caregiver = caregiverId;
     }

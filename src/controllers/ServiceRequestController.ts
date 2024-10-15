@@ -12,12 +12,9 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
         const { id } = req.params;
 
         try {
-            const serviceRequest =
-                await this.repository.getServiceRequestDetails(Number(id));
+            const serviceRequest = await this.repository.getServiceRequestDetails(Number(id));
             if (!serviceRequest) {
-                return res
-                    .status(404)
-                    .json({ message: 'Service request not found' });
+                return res.status(404).json({ message: 'Service request not found' });
             }
             return res.status(200).json(serviceRequest);
         } catch (error) {
@@ -27,8 +24,7 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
 
     getAllRequest = async (req: Request, res: Response) => {
         try {
-            const serviceRequests =
-                await this.repository.getServiceAllRequests();
+            const serviceRequests = await this.repository.getServiceAllRequests();
             return res.status(200).json(serviceRequests);
         } catch (error) {
             return res.status(500).json(error);
@@ -38,11 +34,13 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
     create = async (req: Request, res: Response): Promise<void> => {
         const { caregiverId, serviceId } = req.body;
 
+        const requestExists = await this.repository.getServiceRequestDetails(serviceId);
+        if (requestExists) {
+            res.status(400).json({ message: 'Service request already exists' });
+        }
+
         try {
-            const serviceRequest = new ServiceRequestEntity(
-                caregiverId,
-                serviceId
-            );
+            const serviceRequest = new ServiceRequestEntity(caregiverId, serviceId);
             await this.repository.create(serviceRequest);
             res.status(200).json(serviceRequest);
         } catch (error) {
@@ -54,22 +52,15 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
         try {
             const { id } = req.params;
             if (!id) {
-                return res
-                    .status(400)
-                    .json({ message: 'ID parameter is required' });
+                return res.status(400).json({ message: 'ID parameter is required' });
             }
 
             const { accepted } = req.body;
             if (accepted === undefined) {
-                return res
-                    .status(400)
-                    .json({ message: 'Accepted status is required' });
+                return res.status(400).json({ message: 'Accepted status is required' });
             }
 
-            const serviceRequest = await this.repository.acceptServiceRequest(
-                Number(id),
-                accepted
-            );
+            const serviceRequest = await this.repository.acceptServiceRequest(Number(id), accepted);
 
             return res.status(200).json(serviceRequest);
         } catch (error) {

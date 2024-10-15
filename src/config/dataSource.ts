@@ -17,9 +17,7 @@ export const AppDataSource = new DataSource({
         SeniorEntity,
         SeniorServiceEntity,
         ServiceRequestEntity,
-        FeedbackEntity
+        FeedbackEntity,
     ],
     synchronize: true,
-
-    migrations: ['./src/migrations/*.ts']
 });

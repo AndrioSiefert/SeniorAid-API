@@ -6,37 +6,48 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import SeniorEntity from '../entities/SeniorEntity';
 import CaregiverEntity from '../entities/CaregiverEntity';
+import path from 'path';
 dotenv.config();
 
 class UserController extends Controllers<UserRepository> {
     constructor(repository: UserRepository) {
         super(repository);
     }
+
     createUser = async (req: Request, res: Response) => {
         const existingUser = await this.repository.getByEmail(req.body.email);
         if (existingUser) {
-            return res.status(400).json({ error: 'Usuário já cadastrado' });
+            return res.status(400).json({
+                error: 'Usuário já cadastrado',
+            });
         }
 
         const dados = req.body;
+        const requestImage = req.file as Express.Multer.File;
+
+        if (!requestImage) {
+            return res.status(400).json({
+                error: 'Imagem não encontrada',
+            });
+        }
+        const imageFilename = requestImage.filename;
+        console.log(`Image uploaded: ${imageFilename}`); // Adicionado para debug
+        dados.photo = imageFilename;
+
         const password_confirmation = req.body.password_confirmation;
+        if (dados.password !== password_confirmation) {
+            return res.status(400).json({
+                error: 'As senhas não coincidem',
+            });
+        }
+
+        if (dados.user_type !== 'senior' && dados.user_type !== 'caregiver') {
+            return res.status(400).json({
+                error: 'Tipo de usuário inválido',
+            });
+        }
 
         try {
-            if (dados.password !== password_confirmation) {
-                return res
-                    .status(400)
-                    .json({ error: 'As senhas não coincidem' });
-            }
-
-            if (
-                dados.user_type !== 'senior' &&
-                dados.user_type !== 'caregiver'
-            ) {
-                return res
-                    .status(400)
-                    .json({ error: 'Tipo de usuário inválido' });
-            }
-
             const saltRounds = 10;
             const hashedPassword = bcrypt.hashSync(dados.password, saltRounds);
             dados.password = hashedPassword;
@@ -52,6 +63,7 @@ class UserController extends Controllers<UserRepository> {
                     savedEntity.password,
                     savedEntity.cpf,
                     savedEntity.age,
+                    savedEntity.gender,
                     savedEntity.phone,
                     savedEntity.cep,
                     savedEntity.neighborhood,
@@ -59,7 +71,8 @@ class UserController extends Controllers<UserRepository> {
                     savedEntity.state,
                     savedEntity.street,
                     savedEntity.address_number,
-                    savedEntity.photo
+                    savedEntity.photo,
+                    savedEntity.user_type,
                 );
                 seniorEntity.user = savedEntity;
                 await seniorRepo.save(seniorEntity);
@@ -71,6 +84,7 @@ class UserController extends Controllers<UserRepository> {
                     savedEntity.password,
                     savedEntity.cpf,
                     savedEntity.age,
+                    savedEntity.gender,
                     savedEntity.phone,
                     savedEntity.cep,
                     savedEntity.neighborhood,
@@ -78,7 +92,8 @@ class UserController extends Controllers<UserRepository> {
                     savedEntity.state,
                     savedEntity.street,
                     savedEntity.address_number,
-                    savedEntity.photo
+                    savedEntity.photo,
+                    savedEntity.user_type,
                 );
                 caregiverEntity.user = savedEntity;
                 await caregiverRepo.save(caregiverEntity);
@@ -86,28 +101,32 @@ class UserController extends Controllers<UserRepository> {
 
             const jwtSecret = process.env.JWT_SECRET;
             if (!jwtSecret) {
-                return res
-                    .status(500)
-                    .json({ error: 'Erro interno do servidor' });
+                return res.status(500).json({
+                    error: 'Erro interno do servidor',
+                });
             }
             const token = jwt.sign(
                 {
                     id: savedEntity.id,
                     name: savedEntity.name,
-                    userType: savedEntity.user_type
+                    userType: savedEntity.user_type,
+                    caregiverId: savedEntity.caregiver?.id,
+                    seniorId: savedEntity.senior?.id,
                 },
                 jwtSecret,
-                { expiresIn: '1h' }
+                { expiresIn: '1h' },
             );
             res.status(201).json({
                 entity: savedEntity,
                 token: token,
                 userType: savedEntity.user_type,
-                message: `criado com sucesso`
+                message: `criado com sucesso`,
             });
         } catch (error) {
             console.error('Erro ao criar entidade:', error);
-            res.status(500).json({ error: 'Erro interno do servidor' });
+            res.status(500).json({
+                error: 'Erro interno do servidor',
+            });
         }
     };
 
@@ -119,27 +138,31 @@ class UserController extends Controllers<UserRepository> {
             if (loginUser) {
                 const jwtSecret = process.env.JWT_SECRET;
                 if (!jwtSecret) {
-                    return res
-                        .status(500)
-                        .json({ error: 'Erro interno do servidor' });
+                    return res.status(500).json({
+                        error: 'Erro interno do servidor',
+                    });
                 }
                 const token = jwt.sign(
                     {
                         id: loginUser.id,
                         name: loginUser.name,
-                        userType: loginUser.user_type
+                        userType: loginUser.user_type,
+                        caregiverId: loginUser.caregiver?.id,
+                        seniorId: loginUser.senior?.id,
                     },
                     jwtSecret,
-                    { expiresIn: '1h' }
+                    { expiresIn: '1h' },
                 );
                 res.status(200).json({
                     user: loginUser,
                     token: token,
                     userType: loginUser.user_type,
-                    message: 'Usuário logado com sucesso'
+                    message: 'Usuário logado com sucesso',
                 });
             } else {
-                res.status(400).json({ error: 'Usuário não encontrado' });
+                res.status(400).json({
+                    error: 'Usuário não encontrado',
+                });
             }
         } catch (error) {
             res.status(500).json(error);

@@ -8,7 +8,6 @@ import {
     UpdateDateColumn,
     OneToOne,
     JoinColumn,
-    OneToMany
 } from 'typeorm';
 import CaregiverEntity from './CaregiverEntity';
 import SeniorEntity from './SeniorEntity';
@@ -32,6 +31,9 @@ export default class UserEntity extends BaseEntity {
 
     @Column()
     age: number;
+
+    @Column()
+    gender: 'man' | 'woman';
 
     @Column()
     phone: string;
@@ -69,12 +71,12 @@ export default class UserEntity extends BaseEntity {
     @DeleteDateColumn()
     deletedDate!: Date;
 
-    @OneToOne(() => SeniorEntity, (senior) => senior.user, { nullable: true })
+    @OneToOne(() => SeniorEntity, senior => senior.user, { nullable: true })
     @JoinColumn()
     senior?: SeniorEntity;
 
-    @OneToOne(() => CaregiverEntity, (caregiver) => caregiver.user, {
-        nullable: true
+    @OneToOne(() => CaregiverEntity, caregiver => caregiver.user, {
+        nullable: true,
     })
     @JoinColumn()
     caregiver?: CaregiverEntity;
@@ -85,6 +87,7 @@ export default class UserEntity extends BaseEntity {
         password: string,
         cpf: string,
         age: number,
+        gender: 'man' | 'woman',
         phone: string,
         cep: string,
         city: string,
@@ -93,7 +96,7 @@ export default class UserEntity extends BaseEntity {
         street: string,
         address_number: number,
         photo: string,
-        user_type: 'senior' | 'caregiver'
+        user_type: 'senior' | 'caregiver',
     ) {
         super();
         this.name = name;
@@ -101,6 +104,7 @@ export default class UserEntity extends BaseEntity {
         this.password = password;
         this.cpf = cpf;
         this.age = age;
+        this.gender = gender;
         this.phone = phone;
         this.cep = cep;
         this.city = city;

@@ -6,7 +6,7 @@ import {
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
 } from 'typeorm';
 import CaregiverEntity from './CaregiverEntity';
 import SeniorEntity from './SeniorEntity';
@@ -22,6 +22,12 @@ export default class FeedbackEntity extends BaseEntity {
 
     @Column({ type: 'int', default: 0 })
     rating!: number;
+
+    @Column()
+    giverId!: number;
+
+    @Column()
+    receiverId!: number;
 
     @CreateDateColumn()
     createdDate!: Date;
@@ -42,7 +48,7 @@ export default class FeedbackEntity extends BaseEntity {
         giver: SeniorEntity,
         receiver: CaregiverEntity,
         comment: string,
-        rating: number
+        rating: number,
     ) {
         super();
         this.giver = giver;

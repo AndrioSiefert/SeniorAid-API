@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import FeedbackRepository from '../repository/FeedbackRepository';
 import Controllers from './Controllers';
 import FeedbackEntity from '../entities/FeedbackEntity';
-import CaregiverEntity from '../entities/CaregiverEntity';
-import SeniorEntity from '../entities/SeniorEntity';
 import SeniorRepository from '../repository/SeniorRepository';
 import CaregiverRepository from '../repository/CaregiverRepository';
 
@@ -14,7 +12,7 @@ class FeedbackController extends Controllers<FeedbackRepository> {
     constructor(
         feedback: FeedbackRepository,
         seniorRepository: SeniorRepository,
-        caregiverRepository: CaregiverRepository
+        caregiverRepository: CaregiverRepository,
     ) {
         super(feedback);
         this.seniorRepository = seniorRepository;
@@ -22,24 +20,36 @@ class FeedbackController extends Controllers<FeedbackRepository> {
     }
 
     create = async (req: Request, res: Response): Promise<void> => {
-        const { giverId, receiverId, comment, rating } = req.body;
+        const { giverId, receiverId, comment, rating } = <FeedbackEntity>(
+            req.body
+        );
 
-        const giver = await this.caregiverRepository.getById(giverId);
-        const receiver = await this.seniorRepository.getById(receiverId);
+        const giver = await this.seniorRepository.getById(receiverId);
+        const receiver = await this.caregiverRepository.getById(giverId);
 
         if (!giver || !receiver) {
             res.status(404).json({ message: 'Giver or Receiver not found' });
             return;
         }
 
-        const feedback = new FeedbackEntity(
-            giverId,
-            receiverId,
-            comment,
-            rating
-        );
-        const newFeedback = await this.repository.create(feedback);
-        res.status(201).json(newFeedback);
+        if (rating < 0 || rating > 5) {
+            res.status(400).json({ message: 'Rating must be between 0 and 5' });
+            return;
+        }
+
+        try {
+            const feedback = new FeedbackEntity(
+                giver,
+                receiver,
+                comment,
+                rating,
+            );
+
+            const newFeedback = await this.repository.create(feedback);
+            res.status(201).json(newFeedback);
+        } catch (error) {
+            res.status(400).json({ message: (error as Error).message });
+        }
     };
 
     getGiverAndReciver = async (req: Request, res: Response): Promise<void> => {
