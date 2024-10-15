@@ -8,7 +8,6 @@ import {
     UpdateDateColumn,
     OneToOne,
     JoinColumn,
-    OneToMany
 } from 'typeorm';
 import CaregiverEntity from './CaregiverEntity';
 import SeniorEntity from './SeniorEntity';
@@ -72,12 +71,12 @@ export default class UserEntity extends BaseEntity {
     @DeleteDateColumn()
     deletedDate!: Date;
 
-    @OneToOne(() => SeniorEntity, (senior) => senior.user, { nullable: true })
+    @OneToOne(() => SeniorEntity, senior => senior.user, { nullable: true })
     @JoinColumn()
     senior?: SeniorEntity;
 
-    @OneToOne(() => CaregiverEntity, (caregiver) => caregiver.user, {
-        nullable: true
+    @OneToOne(() => CaregiverEntity, caregiver => caregiver.user, {
+        nullable: true,
     })
     @JoinColumn()
     caregiver?: CaregiverEntity;
@@ -97,7 +96,7 @@ export default class UserEntity extends BaseEntity {
         street: string,
         address_number: number,
         photo: string,
-        user_type: 'senior' | 'caregiver'
+        user_type: 'senior' | 'caregiver',
     ) {
         super();
         this.name = name;

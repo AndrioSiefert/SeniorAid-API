@@ -6,18 +6,17 @@ import seniorRouter from './seniorRouter';
 import seniorServiceRouter from './seniorServiceRouter';
 import serviceRequestRouter from './serviceRequestRouter';
 import userRouter from './userRouter';
+import path from 'path';
 
 const router = (app: express.Router) => {
-    app.use(
-        '/',
-        caregiverRouter,
-        caregiverServiceRouter,
-        feedbackRouter,
-        seniorRouter,
-        seniorServiceRouter,
-        serviceRequestRouter,
-        userRouter
-    );
+    app.use('/images', express.static(path.join(__dirname, '..', '..', 'public/images')));
+    app.use(caregiverRouter);
+    app.use(caregiverServiceRouter);
+    app.use(feedbackRouter);
+    app.use(seniorRouter);
+    app.use(seniorServiceRouter);
+    app.use(serviceRequestRouter);
+    app.use(userRouter);
 };
 
 export default router;

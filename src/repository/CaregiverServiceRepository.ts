@@ -9,14 +9,14 @@ class CaregiverServiceRepository extends GenericRepository<CaregiverServiceEntit
 
     async checkService(caregiverId: string) {
         return await this.repository.findOne({
-            where: { caregiverId },
-            relations: ['caregiver']
+            where: { caregiverId: Number(caregiverId) },
+            relations: ['caregiver'],
         });
     }
 
     allCaregiverWhithService() {
         return this.repository.find({
-            relations: ['caregiver']
+            relations: ['caregiver'],
         });
     }
 }

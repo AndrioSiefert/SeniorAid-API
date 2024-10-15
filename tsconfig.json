@@ -9,7 +9,7 @@
         "noEmitOnError": true,
         "outDir": "./build",
         "strict": true,
-        "strictNullChecks": true,
+        "strictNullChecks": true
     },
     "include": ["./src/**/*", "./server.ts"]
 }

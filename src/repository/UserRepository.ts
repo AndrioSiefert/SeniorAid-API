@@ -28,13 +28,14 @@ class UserRepository extends GenericRepository<UserEntity> {
 
     async getByEmail(email: string): Promise<UserEntity | null> {
         return this.repository.findOne({
-            where: { email }
+            where: { email },
         });
     }
 
     async login(email: string, password: string): Promise<UserEntity | null> {
         const user = await this.repository.findOne({
-            where: { email: email }
+            where: { email: email },
+            relations: ['caregiver', 'senior'],
         });
         if (!user) {
             return null;
