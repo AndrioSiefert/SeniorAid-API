@@ -1,4 +1,4 @@
-import { BaseEntity, DeleteResult, Repository } from 'typeorm';
+import { BaseEntity, DeleteResult, FindOptionsWhere, Repository } from 'typeorm';
 
 class GenericRepository<Entity extends BaseEntity> {
     protected repository: Repository<Entity>;
@@ -13,7 +13,7 @@ class GenericRepository<Entity extends BaseEntity> {
 
     async getById(id: number): Promise<Entity | undefined> {
         const result = await this.repository.findOne({
-            where: { id } as any
+            where: { id } as any,
         });
         return result || undefined;
     }
@@ -28,7 +28,7 @@ class GenericRepository<Entity extends BaseEntity> {
 
     async update(id: string, update: Entity): Promise<Entity> {
         const isUpdated = await this.repository.findOne({
-            where: { id }
+            where: { id },
         } as any);
         await this.repository.save({ ...isUpdated, ...update });
         return { ...isUpdated, ...update };
@@ -43,7 +43,9 @@ class GenericRepository<Entity extends BaseEntity> {
     }
 
     async login(email: string, password: string): Promise<Entity | null> {
-        return this.repository.findOne({ where: { email, password } } as any);
+        return this.repository.findOne({
+            where: { email, password } as unknown as FindOptionsWhere<Entity>,
+        });
     }
 
     async save(entity: Entity): Promise<Entity> {

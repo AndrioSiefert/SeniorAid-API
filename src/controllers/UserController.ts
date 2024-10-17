@@ -6,7 +6,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import SeniorEntity from '../entities/SeniorEntity';
 import CaregiverEntity from '../entities/CaregiverEntity';
-import path from 'path';
+import userSchema from '../schemas/userSchema';
+import encryptPassword from '../common/encryptPassword';
 dotenv.config();
 
 class UserController extends Controllers<UserRepository> {
@@ -15,6 +16,11 @@ class UserController extends Controllers<UserRepository> {
     }
 
     createUser = async (req: Request, res: Response) => {
+        const { error } = userSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
+
         const existingUser = await this.repository.getByEmail(req.body.email);
         if (existingUser) {
             return res.status(400).json({
@@ -31,26 +37,11 @@ class UserController extends Controllers<UserRepository> {
             });
         }
         const imageFilename = requestImage.filename;
-        console.log(`Image uploaded: ${imageFilename}`); // Adicionado para debug
+        console.log(`Image uploaded: ${imageFilename}`);
         dados.photo = imageFilename;
 
-        const password_confirmation = req.body.password_confirmation;
-        if (dados.password !== password_confirmation) {
-            return res.status(400).json({
-                error: 'As senhas não coincidem',
-            });
-        }
-
-        if (dados.user_type !== 'senior' && dados.user_type !== 'caregiver') {
-            return res.status(400).json({
-                error: 'Tipo de usuário inválido',
-            });
-        }
-
         try {
-            const saltRounds = 10;
-            const hashedPassword = bcrypt.hashSync(dados.password, saltRounds);
-            dados.password = hashedPassword;
+            dados.password = encryptPassword(dados.password);
 
             const newEntity = this.repository.createUser(dados);
             const savedEntity = await this.repository.save(newEntity);

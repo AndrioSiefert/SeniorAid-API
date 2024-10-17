@@ -6,10 +6,10 @@ import fs from 'fs';
 // Caminho para o diretório de armazenamento das imagens
 const storagePath = path.join(__dirname, '..', '..', 'public/images');
 
-// Verifica se o diretório existe, caso contrário, cria-o
+// Verifica se o diretório existe, caso contrário ele cria o diretório
 fs.mkdirSync(storagePath, { recursive: true });
 
-// Configuração do multer
+
 const storage = multer.diskStorage({
     destination: (req: Request, file, callback) => {
         callback(null, storagePath); // Armazena as imagens no diretório especificado

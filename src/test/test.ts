@@ -8,20 +8,21 @@
 
 //         // Cria uma nova instância de UserEntity
 //         const user = new UserEntity(
-//             'Test User',
-//             'tes@example.com',
-//             'password',
-//             '12345678901',
-//             30,
-//             '123456789',
-//             '00000-000',
-//             'Test Neighborhood',
-//             'Test City',
-//             'Test State',
-//             'Test Street',
-//             123,
-//             'photo.jpg',
-//             'senior'
+//             'John', // name
+//             'Doe', // surname
+//             'john.doe@example.com', // email
+//             'password123', // password
+//             1100,
+//             'man',
+//             '1234567890', // phoneNumber
+//             '123 Main St', // address
+//             'City', // city
+//             'State', // state
+//             'Country', // country
+//             '12345', // postalCode
+//             11, // isActive
+//             'photo', // photo
+//             'senior', // userType
 //         );
 
 //         // Salva o UserEntity
@@ -32,6 +33,4 @@
 //     }
 // }
 
-// testCreateUser().catch((error) =>
-//     console.error('Error executing testCreateUser:', error)
-// );
+// testCreateUser().catch(error => console.error('Error executing testCreateUser:', error));
