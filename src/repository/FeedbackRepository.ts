@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import FeedbackEntity from '../entities/FeedbackEntity';
 import GenericRepository from './GenericRepository';
 
@@ -26,7 +26,7 @@ class FeedbackRepository extends GenericRepository<FeedbackEntity> {
     async getGiverAndReciver(id: number): Promise<FeedbackEntity | null> {
         return await this.repository.findOne({
             where: { id },
-            relations: ['giver', 'reciver']
+            relations: ['giver', 'reciver'],
         });
     }
 }

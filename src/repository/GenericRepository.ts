@@ -27,11 +27,10 @@ class GenericRepository<Entity extends BaseEntity> {
     }
 
     async update(id: string, update: Entity): Promise<Entity> {
-        const isUpdated = await this.repository.findOne({
+        await this.repository.findOne({
             where: { id },
         } as any);
-        await this.repository.save({ ...isUpdated, ...update });
-        return { ...isUpdated, ...update };
+        return this.repository.save({ ...update, id });
     }
 
     async delete(id: string): Promise<{ message: string }> {

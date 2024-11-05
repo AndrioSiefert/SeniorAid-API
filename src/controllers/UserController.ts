@@ -8,6 +8,7 @@ import SeniorEntity from '../entities/SeniorEntity';
 import CaregiverEntity from '../entities/CaregiverEntity';
 import userSchema from '../schemas/userSchema';
 import encryptPassword from '../common/encryptPassword';
+import { BadRequest, Erro } from '../common/erro';
 dotenv.config();
 
 class UserController extends Controllers<UserRepository> {
@@ -23,18 +24,14 @@ class UserController extends Controllers<UserRepository> {
 
         const existingUser = await this.repository.getByEmail(req.body.email);
         if (existingUser) {
-            return res.status(400).json({
-                error: 'Usuário já cadastrado',
-            });
+            throw new BadRequest('Email já cadastrado');
         }
 
         const dados = req.body;
         const requestImage = req.file as Express.Multer.File;
 
         if (!requestImage) {
-            return res.status(400).json({
-                error: 'Imagem não encontrada',
-            });
+            throw new BadRequest('Imagem não enviada');
         }
         const imageFilename = requestImage.filename;
         console.log(`Image uploaded: ${imageFilename}`);
@@ -103,6 +100,7 @@ class UserController extends Controllers<UserRepository> {
                     userType: savedEntity.user_type,
                     caregiverId: savedEntity.caregiver?.id,
                     seniorId: savedEntity.senior?.id,
+                    photo: savedEntity.photo,
                 },
                 jwtSecret,
                 { expiresIn: '1h' },
@@ -111,6 +109,7 @@ class UserController extends Controllers<UserRepository> {
                 entity: savedEntity,
                 token: token,
                 userType: savedEntity.user_type,
+                photo: savedEntity.photo,
                 message: `criado com sucesso`,
             });
         } catch (error) {
@@ -123,40 +122,33 @@ class UserController extends Controllers<UserRepository> {
 
     login = async (req: Request, res: Response) => {
         const { email, password } = req.body;
-        try {
-            const loginUser = await this.repository.login(email, password);
+        const loginUser = await this.repository.login(email, password);
 
-            if (loginUser) {
-                const jwtSecret = process.env.JWT_SECRET;
-                if (!jwtSecret) {
-                    return res.status(500).json({
-                        error: 'Erro interno do servidor',
-                    });
-                }
-                const token = jwt.sign(
-                    {
-                        id: loginUser.id,
-                        name: loginUser.name,
-                        userType: loginUser.user_type,
-                        caregiverId: loginUser.caregiver?.id,
-                        seniorId: loginUser.senior?.id,
-                    },
-                    jwtSecret,
-                    { expiresIn: '1h' },
-                );
-                res.status(200).json({
-                    user: loginUser,
-                    token: token,
-                    userType: loginUser.user_type,
-                    message: 'Usuário logado com sucesso',
-                });
-            } else {
-                res.status(400).json({
-                    error: 'Usuário não encontrado',
-                });
+        if (loginUser) {
+            const jwtSecret = process.env.JWT_SECRET;
+            if (!jwtSecret) {
+                throw new Erro('Erro interno do servidor', 500);
             }
-        } catch (error) {
-            res.status(500).json(error);
+            const token = jwt.sign(
+                {
+                    id: loginUser.id,
+                    name: loginUser.name,
+                    userType: loginUser.user_type,
+                    caregiverId: loginUser.caregiver?.id,
+                    seniorId: loginUser.senior?.id,
+                    photo: loginUser.photo,
+                },
+                jwtSecret,
+                { expiresIn: '1h' },
+            );
+            res.status(200).json({
+                user: loginUser,
+                token: token,
+                userType: loginUser.user_type,
+                message: 'Usuário logado com sucesso',
+            });
+        } else {
+            throw new Erro('Usuário ou senha inválidos', 401);
         }
     };
 }

@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import schemaMiddleware from '../middleware/schemaMiddleware';
 import userSchema from '../schemas/userSchema';
+import { idCheckMiddleware } from '../middleware/idCheckMiddleware';
 
 const router = express.Router();
 const upload = multer(uploadConfig);
@@ -22,8 +23,8 @@ router.post('/user', upload.single('photo'), schemaMiddleware(userSchema), (req,
 router.get('/user', (req, res) => controllers.getAll(req, res));
 router.get('/user/:id', (req, res) => controllers.getById(req, res));
 router.post('/user/login', (req, res) => controllers.login(req, res));
-router.put('/user/:id', (req, res) => controllers.update(req, res));
-router.delete('/user/:id', (req, res) => controllers.delete(req, res));
+router.put('/user/:id', idCheckMiddleware, (req, res) => controllers.update(req, res));
+router.delete('/user/:id', idCheckMiddleware, (req, res) => controllers.delete(req, res));
 
 // Rota para listar as imagens no diretório public/images  ****(GAMBIARRA PARA FUNCIONAR NO FRONT)**** (não é recomendado)
 router.get('/images', (req, res) => {

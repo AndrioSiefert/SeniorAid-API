@@ -20,9 +20,7 @@ class FeedbackController extends Controllers<FeedbackRepository> {
     }
 
     create = async (req: Request, res: Response): Promise<void> => {
-        const { giverId, receiverId, comment, rating } = <FeedbackEntity>(
-            req.body
-        );
+        const { giverId, receiverId, comment, rating } = <FeedbackEntity>req.body;
 
         const giver = await this.seniorRepository.getById(receiverId);
         const receiver = await this.caregiverRepository.getById(giverId);
@@ -38,12 +36,7 @@ class FeedbackController extends Controllers<FeedbackRepository> {
         }
 
         try {
-            const feedback = new FeedbackEntity(
-                giver,
-                receiver,
-                comment,
-                rating,
-            );
+            const feedback = new FeedbackEntity(giver, receiver, comment, rating);
 
             const newFeedback = await this.repository.create(feedback);
             res.status(201).json(newFeedback);
@@ -61,6 +54,16 @@ class FeedbackController extends Controllers<FeedbackRepository> {
         }
         res.status(200).json(feedback);
     };
+
+    // feedbackStatus = async (req: Request, res: Response): Promise<void> => {
+    //     const { id } = req.params;
+    //     const feedback = await this.repository.getById(Number(id));
+    //     if (feedback) {
+    //         feedback.status = !feedback.status;
+    //         await this.repository.update(id, feedback);
+    //         res.status(200).json(feedback);
+    //     }
+    // };
 }
 
 export default FeedbackController;

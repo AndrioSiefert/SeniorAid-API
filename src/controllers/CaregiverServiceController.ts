@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import CaregiverServiceRepository from '../repository/CaregiverServiceRepository';
 import Controllers from './Controllers';
+import { BadRequest, Conflict } from '../common/erro';
 
 class CaregiverServiceController extends Controllers<CaregiverServiceRepository> {
     constructor(repository: CaregiverServiceRepository) {
@@ -8,24 +9,15 @@ class CaregiverServiceController extends Controllers<CaregiverServiceRepository>
     }
 
     create = async (req: Request, res: Response) => {
-        try {
-            const { caregiverId } = req.body;
-            const existingServices = await this.repository.checkService(
-                caregiverId
-            );
-
-            if (existingServices) {
-                res.status(400).json({ message: 'Service already exists' });
-                return;
-            }
-
-            const service = await this.repository.create(req.body);
-            await this.repository.save(service);
-
-            res.status(201).json(service);
-        } catch (error) {
-            res.status(500).json(error);
+        const { caregiverId } = req.body;
+        const existingServices = await this.repository.checkService(caregiverId);
+        if (existingServices) {
+            throw new Conflict('Service already exists');
         }
+        const service = await this.repository.create(req.body);
+        await this.repository.save(service);
+
+        res.status(201).json({ message: 'Service created successfully', service });
     };
 
     getInfoService = async (req: Request, res: Response) => {

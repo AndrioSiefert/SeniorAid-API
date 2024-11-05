@@ -35,8 +35,10 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
         const { caregiverId, serviceId } = req.body;
 
         const requestExists = await this.repository.getServiceRequestDetails(serviceId);
+
         if (requestExists) {
-            res.status(400).json({ message: 'Service request already exists' });
+            res.status(400).json({ message: 'Serviço já solicitado' });
+            return;
         }
 
         try {

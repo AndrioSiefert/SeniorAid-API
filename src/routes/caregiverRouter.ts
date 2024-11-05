@@ -5,9 +5,7 @@ import CaregiverController from '../controllers/CaregiverController.js';
 
 const router = express.Router();
 
-const caregiverRepository = new CaregiverRepository(
-    AppDataSource.getRepository('CaregiverEntity')
-);
+const caregiverRepository = new CaregiverRepository(AppDataSource.getRepository('CaregiverEntity'));
 
 const controllers = new CaregiverController(caregiverRepository);
 

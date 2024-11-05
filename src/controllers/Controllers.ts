@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import GenericRepository from '../repository/GenericRepository.js';
+import { NotFound } from '../common/erro.js';
 
 class Controllers<T extends GenericRepository<any>> {
     protected repository: T;
@@ -48,16 +49,11 @@ class Controllers<T extends GenericRepository<any>> {
         const { id } = req.params;
         const entity = req.body;
 
-        try {
-            const updatedEntity = await this.repository.update(id, entity);
-            if (!updatedEntity) {
-                return res.status(404).json({ message: 'Entity not found' });
-            }
-            res.status(200).json(updatedEntity);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal server error' });
+        const updatedEntity = await this.repository.update(id, entity);
+        if (!updatedEntity) {
+            throw new NotFound('Entity not found');
         }
+        res.status(200).json(updatedEntity);
     };
 
     delete = async (req: Request, res: Response) => {
