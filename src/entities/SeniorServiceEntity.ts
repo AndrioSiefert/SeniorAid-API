@@ -10,7 +10,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('senior_service')
@@ -56,7 +56,7 @@ export default class SeniorServiceEntity extends BaseEntity {
     senior!: SeniorEntity;
 
     @OneToMany(() => ServiceRequestEntity, (request) => request.service, {
-        cascade: true
+        cascade: true,
     })
     @JoinColumn({ name: 'service_id' })
     serviceRequests!: ServiceRequestEntity[];
@@ -69,7 +69,7 @@ export default class SeniorServiceEntity extends BaseEntity {
         medications: string,
         description: string,
         price: string,
-        seniorId: SeniorEntity
+        seniorId: SeniorEntity,
     ) {
         super();
         this.serviceName = serviceName;

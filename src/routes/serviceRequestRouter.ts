@@ -11,6 +11,7 @@ router.get('/service-request', (req, res) => controllers.getAllRequest(req, res)
 router.get('/service-request/:id', (req, res) => controllers.getById(req, res));
 router.post('/service-request', (req, res) => controllers.create(req, res));
 router.put('/service-request/accept/:id', (req, res) => controllers.acceptServiceRequest(req, res));
+router.put('/service-request/finish/:id', (req, res) => controllers.finishServiceRequest(req, res));
 router.delete('/service-request/:id', (req, res) => controllers.delete(req, res));
 
 export default router;

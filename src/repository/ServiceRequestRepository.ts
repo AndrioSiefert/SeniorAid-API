@@ -10,19 +10,19 @@ class ServiceRequestRepository extends GenericRepository<ServiceRequestEntity> {
     async getServiceRequestDetails(id: number) {
         return await this.repository.findOne({
             where: { id },
-            relations: ['service', 'caregiver', 'service.senior']
+            relations: ['service', 'caregiver', 'service.senior'],
         });
     }
 
     async getServiceAllRequests() {
         return await this.repository.find({
-            relations: ['service', 'caregiver', 'service.senior']
+            relations: ['service', 'caregiver', 'service.senior'],
         });
     }
 
     async acceptServiceRequest(id: number | undefined, accepted: boolean) {
         const serviceRequest = await this.repository.findOne({
-            where: { id }
+            where: { id },
         });
 
         if (!serviceRequest) {
@@ -38,6 +38,26 @@ class ServiceRequestRepository extends GenericRepository<ServiceRequestEntity> {
         await this.repository.save(serviceRequest);
 
         return { message: 'Serviço Aceito' };
+    }
+
+    async finishServiceRequest(id: number | undefined, finished: boolean) {
+        const serviceRequest = await this.repository.findOne({
+            where: { id },
+        });
+
+        if (!serviceRequest) {
+            return { message: 'Serviço não encontrado' };
+        }
+
+        if (serviceRequest.finished) {
+            return { message: 'Esse serviço já foi finalizado' };
+        }
+
+        serviceRequest.finished = finished;
+
+        await this.repository.save(serviceRequest);
+
+        return { message: 'Serviço Finalizado' };
     }
 }
 

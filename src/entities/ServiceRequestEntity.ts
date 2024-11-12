@@ -7,7 +7,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
 } from 'typeorm';
 import CaregiverEntity from './CaregiverEntity';
 import SeniorServiceEntity from './SeniorServiceEntity';
@@ -23,6 +23,9 @@ export default class ServiceRequestEntity extends BaseEntity {
     @CreateDateColumn()
     createdDate!: Date;
 
+    @Column({ default: false })
+    finished!: boolean;
+
     @UpdateDateColumn()
     updatedDate!: Date;
 
@@ -32,11 +35,7 @@ export default class ServiceRequestEntity extends BaseEntity {
     @ManyToOne(() => CaregiverEntity, (caregiver) => caregiver.serviceRequests)
     caregiver!: CaregiverEntity;
 
-    @ManyToOne(
-        () => SeniorServiceEntity,
-        (service) => service.serviceRequests,
-        { eager: true }
-    )
+    @ManyToOne(() => SeniorServiceEntity, (service) => service.serviceRequests, { eager: true })
     service!: SeniorServiceEntity;
 
     constructor(caregiver: CaregiverEntity, service: SeniorServiceEntity) {

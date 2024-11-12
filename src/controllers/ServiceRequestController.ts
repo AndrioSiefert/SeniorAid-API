@@ -69,5 +69,25 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
             return res.status(500).json(error);
         }
     };
+
+    finishServiceRequest = async (req: Request, res: Response) => {
+        try {
+            const { id } = req.params;
+            if (!id) {
+                return res.status(400).json({ message: 'ID parameter is required' });
+            }
+
+            const { finished } = req.body;
+            if (finished === undefined) {
+                return res.status(400).json({ message: 'Finished status is required' });
+            }
+
+            const serviceRequest = await this.repository.finishServiceRequest(Number(id), finished);
+
+            return res.status(200).json(serviceRequest);
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    };
 }
 export default ServiceRequestController;
