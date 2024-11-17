@@ -8,6 +8,17 @@ class SeniorServiceRepository extends GenericRepository<SeniorServiceEntity> {
         super(services);
     }
 
+    async findSeniorById(id: string) {
+        return await this.repository.manager.findOne(SeniorServiceEntity, { where: { id: Number(id) } });
+    }
+
+    async findSeniorServiceById(seniorId: string) {
+        return await this.repository.find({
+            where: { senior: { id: Number(seniorId) } },
+            relations: ['senior', 'serviceRequests'], // Inclua as relações necessárias
+        });
+    }
+
     async findByIdInfo(id: string) {
         return await this.repository.findOne({
             where: { id: Number(id) },

@@ -26,6 +26,26 @@ class SeniorServiceController extends Controllers<SeniorServiceRepository> {
         }
     };
 
+    getServiceWithSeniorId = async (req: Request, res: Response) => {
+        try {
+            const { seniorId } = req.params;
+
+            if (!seniorId) {
+                return res.status(400).json({ message: 'Senior ID is required' });
+            }
+
+            const services = await this.repository.findSeniorServiceById(seniorId);
+            if (!services || services.length === 0) {
+                return res.status(404).json({ message: 'No services found for this Senior ID' });
+            }
+
+            res.status(200).json(services);
+        } catch (error) {
+            console.error(error); // Log para debugging
+            res.status(500).json({ message: 'Internal server error', error });
+        }
+    };
+
     ServiceAndSeniorInfoGlobal = async (req: Request, res: Response) => {
         try {
             const services = await this.repository.ServiceAndSeniorInfo();

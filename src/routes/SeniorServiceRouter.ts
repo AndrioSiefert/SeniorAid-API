@@ -10,6 +10,7 @@ const seniorServiceRepository = new SeniorServiceRepository(AppDataSource.getRep
 const controllers = new SeniorServiceController(seniorServiceRepository);
 
 router.get('/seniorService', (req, res) => controllers.getAll(req, res));
+router.get('/seniorService/senior/:seniorId', (req, res) => controllers.getServiceWithSeniorId(req, res));
 router.get('/seniorService/info', (req, res) => controllers.ServiceAndSeniorInfoGlobal(req, res));
 router.get('/seniorService/:id', (req, res) => controllers.getById(req, res));
 router.get('/seniorService/id/:id', (req, res) => controllers.findForInfo(req, res));

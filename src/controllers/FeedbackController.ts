@@ -22,8 +22,8 @@ class FeedbackController extends Controllers<FeedbackRepository> {
     create = async (req: Request, res: Response): Promise<void> => {
         const { giverId, receiverId, comment, rating } = <FeedbackEntity>req.body;
 
-        const giver = await this.seniorRepository.getById(receiverId);
-        const receiver = await this.caregiverRepository.getById(giverId);
+        const giver = await this.seniorRepository.getById(giverId);
+        const receiver = await this.caregiverRepository.getById(receiverId);
 
         if (!giver || !receiver) {
             res.status(404).json({ message: 'Giver or Receiver not found' });
