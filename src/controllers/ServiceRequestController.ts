@@ -2,6 +2,8 @@ import ServiceRequestRepository from '../repository/ServiceRequestRepository';
 import Controllers from './Controllers';
 import { Request, Response } from 'express';
 import ServiceRequestEntity from '../entities/ServiceRequestEntity';
+import CaregiverEntity from '../entities/CaregiverEntity';
+import SeniorServiceEntity from '../entities/SeniorServiceEntity';
 
 class ServiceRequestController extends Controllers<ServiceRequestRepository> {
     constructor(repository: ServiceRequestRepository) {
@@ -34,7 +36,12 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
     create = async (req: Request, res: Response): Promise<void> => {
         const { caregiverId, serviceId } = req.body;
 
-        const requestExists = await this.repository.getServiceRequestDetails(serviceId);
+        if (!caregiverId || !serviceId) {
+            res.status(400).json({ message: 'Caregiver ID and Service ID are required' });
+            return;
+        }
+
+        const requestExists = await this.repository.findServiceRequest(caregiverId, serviceId);
 
         if (requestExists) {
             res.status(400).json({ message: 'Serviço já solicitado' });
@@ -42,11 +49,15 @@ class ServiceRequestController extends Controllers<ServiceRequestRepository> {
         }
 
         try {
-            const serviceRequest = new ServiceRequestEntity(caregiverId, serviceId);
-            await this.repository.create(serviceRequest);
-            res.status(200).json(serviceRequest);
+            const caregiver = { id: caregiverId } as CaregiverEntity;
+            const service = { id: serviceId } as SeniorServiceEntity;
+
+            const serviceRequest = new ServiceRequestEntity(caregiver, service);
+            await this.repository.createService(serviceRequest);
+
+            res.status(201).json(serviceRequest);
         } catch (error) {
-            res.status(500).json(error);
+            res.status(500).json({ message: 'Erro ao criar serviço', error });
         }
     };
 

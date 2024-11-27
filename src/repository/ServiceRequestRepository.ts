@@ -14,6 +14,20 @@ class ServiceRequestRepository extends GenericRepository<ServiceRequestEntity> {
         });
     }
 
+    async findServiceRequest(caregiverId: number, serviceId: number) {
+        return await this.repository.findOne({
+            where: {
+                caregiver: { id: caregiverId },
+                service: { id: serviceId },
+            },
+            relations: ['service', 'caregiver', 'service.senior'],
+        });
+    }
+
+    async createService(serviceRequest: ServiceRequestEntity) {
+        return await this.save(serviceRequest);
+    }
+
     async getServiceAllRequests() {
         return await this.repository.find({
             relations: ['service', 'caregiver', 'service.senior'],
