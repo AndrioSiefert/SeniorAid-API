@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import CaregiverEntity from './CaregiverEntity';
 import SeniorEntity from './SeniorEntity';
-import UserEntity from './UserEntity';
 
 @Entity('feedback')
 export default class FeedbackEntity extends BaseEntity {
@@ -44,12 +43,7 @@ export default class FeedbackEntity extends BaseEntity {
     @ManyToOne(() => CaregiverEntity, { nullable: false })
     receiver!: CaregiverEntity;
 
-    constructor(
-        giver: SeniorEntity,
-        receiver: CaregiverEntity,
-        comment: string,
-        rating: number,
-    ) {
+    constructor(giver: SeniorEntity, receiver: CaregiverEntity, comment: string, rating: number) {
         super();
         this.giver = giver;
         this.receiver = receiver;

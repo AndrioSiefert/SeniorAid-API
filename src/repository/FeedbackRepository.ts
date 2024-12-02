@@ -29,6 +29,13 @@ class FeedbackRepository extends GenericRepository<FeedbackEntity> {
             relations: ['giver', 'reciver'],
         });
     }
+
+    async feedbackByGiver(id: number): Promise<FeedbackEntity[]> {
+        return await this.repository.find({
+            where: { giverId: id },
+            relations: ['giver', 'receiver'], // Certifique-se de que 'receiver' seja usado
+        });
+    }
 }
 
 export default FeedbackRepository;
